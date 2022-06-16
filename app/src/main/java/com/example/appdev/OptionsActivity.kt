@@ -6,14 +6,12 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 
-class MainActivity : AppCompatActivity() {
-    lateinit var optionsIntent:Intent
+class OptionsActivity : AppCompatActivity() {
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
-        optionsIntent = Intent(this@MainActivity, OptionsActivity::class.java)
-
+        setContentView(R.layout.activity_options)
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
