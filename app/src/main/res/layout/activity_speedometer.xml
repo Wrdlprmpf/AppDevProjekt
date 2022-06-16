@@ -17,4 +17,54 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/unitsText1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="5dp"
+        android:layout_marginTop="100dp"
+        android:text="km/h"
+        app:layout_constraintStart_toEndOf="@+id/speedometerOutput"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/topSpeedOutput"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="200dp"
+        android:text="TopSpeed"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/speedometerOutput" />
+
+    <TextView
+        android:id="@+id/unitsText2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="5dp"
+        android:layout_marginTop="200dp"
+        android:text="km/h"
+        app:layout_constraintStart_toEndOf="@+id/topSpeedOutput"
+        app:layout_constraintTop_toBottomOf="@+id/unitsText1" />
+
+    <TextView
+        android:id="@+id/averageSpeedOutput"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:text="AverageSpeed"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/topSpeedOutput" />
+
+    <TextView
+        android:id="@+id/unitText3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="5dp"
+        android:layout_marginTop="15dp"
+        android:text="km/h"
+        app:layout_constraintStart_toEndOf="@+id/averageSpeedOutput"
+        app:layout_constraintTop_toBottomOf="@+id/unitsText2" />
 </androidx.constraintlayout.widget.ConstraintLayout>
