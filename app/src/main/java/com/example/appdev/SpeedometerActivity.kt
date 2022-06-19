@@ -11,19 +11,24 @@ import android.location.LocationManager
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.Button
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.core.location.LocationManagerCompat.removeUpdates
 
 
 class SpeedometerActivity : AppCompatActivity(), LocationListener {
 	lateinit var lm: LocationManager
 	lateinit var speedOutput: TextView
+	lateinit var startBtn: Button
+	lateinit var stopBtn: Button
 	var topSpeed: Float = 0F
 	var averageSpeed: Float = 0F
 	lateinit var topSpeedOutput: TextView
 	lateinit var averageSpeedOutput: TextView
+	var clicked : Boolean = false
 
 	var speeds = ArrayList<Float>()
 
@@ -34,12 +39,20 @@ class SpeedometerActivity : AppCompatActivity(), LocationListener {
 		speedOutput = findViewById(R.id.speedometerOutput)
 		topSpeedOutput = findViewById(R.id.topSpeedOutput)
 		averageSpeedOutput = findViewById(R.id.averageSpeedOutput)
-		permissionCheck()
-		lm = this.getSystemService(Context.LOCATION_SERVICE) as LocationManager
+		startBtn = findViewById(R.id.startBtn)
+		stopBtn = findViewById(R.id.stopBtn)
 
-		lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0F, this)
-		var isGPSEnabled = lm.isProviderEnabled(LocationManager.GPS_PROVIDER);
-		val lm = this.getSystemService(LOCATION_SERVICE) as LocationManager
+		lm = this.getSystemService(Context.LOCATION_SERVICE) as LocationManager
+		permissionCheck()
+
+		if (!clicked) {
+			lm.removeUpdates(this)
+
+		} else {
+			lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0F, this)
+			var isGPSEnabled = lm.isProviderEnabled(LocationManager.GPS_PROVIDER);
+			val lm = this.getSystemService(LOCATION_SERVICE) as LocationManager
+		}
 	}
 
 	fun permissionCheck() {
@@ -102,5 +115,17 @@ class SpeedometerActivity : AppCompatActivity(), LocationListener {
 			avg += s
 		}
 		averageSpeedOutput.text = (avg / speeds.size).toString()
+	}
+
+	fun clickStart() {
+		startBtn.setOnClickListener {
+			clicked = true
+		}
+	}
+
+	fun clickStop() {
+		stopBtn.setOnClickListener {
+			clicked = false
+		}
 	}
 }
