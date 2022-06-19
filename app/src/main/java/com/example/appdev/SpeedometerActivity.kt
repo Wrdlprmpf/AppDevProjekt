@@ -16,6 +16,7 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.core.location.LocationManagerCompat.isLocationEnabled
 import androidx.core.location.LocationManagerCompat.removeUpdates
 
 
@@ -45,13 +46,18 @@ class SpeedometerActivity : AppCompatActivity(), LocationListener {
 		lm = this.getSystemService(Context.LOCATION_SERVICE) as LocationManager
 		permissionCheck()
 
-		if (!clicked) {
-			lm.removeUpdates(this)
 
-		} else {
+		startBtn.setOnClickListener {
+			clicked = true
+			println(clicked)
 			lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0F, this)
-			var isGPSEnabled = lm.isProviderEnabled(LocationManager.GPS_PROVIDER);
-			val lm = this.getSystemService(LOCATION_SERVICE) as LocationManager
+		}
+
+		stopBtn.setOnClickListener {
+			clicked = false
+			println(clicked)
+			lm.removeUpdates(this)
+			speedOutput.text = "0.0"
 		}
 	}
 
@@ -92,7 +98,7 @@ class SpeedometerActivity : AppCompatActivity(), LocationListener {
 			println("0")
 			speeds.add(0F)
 		} else {
-			var speed = (location.getSpeed() * 3600) / 1000
+			var speed = (location.speed * 3600) / 1000
 			speedOutput.text = speed.toString()
 			maximumSpeed(speed)
 			speeds.add(speed)
@@ -110,22 +116,11 @@ class SpeedometerActivity : AppCompatActivity(), LocationListener {
 	}
 
 	fun averageSpeed() {
-		var avg = 0F;
+		var avg = 0F
 		for (s in speeds) {
 			avg += s
 		}
 		averageSpeedOutput.text = (avg / speeds.size).toString()
 	}
 
-	fun clickStart() {
-		startBtn.setOnClickListener {
-			clicked = true
-		}
-	}
-
-	fun clickStop() {
-		stopBtn.setOnClickListener {
-			clicked = false
-		}
-	}
 }
