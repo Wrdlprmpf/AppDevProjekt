@@ -12,6 +12,7 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Button
+import android.widget.Spinner
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
@@ -30,6 +31,11 @@ class SpeedometerActivity : AppCompatActivity(), LocationListener {
 	lateinit var topSpeedOutput: TextView
 	lateinit var averageSpeedOutput: TextView
 	var clicked : Boolean = false
+	lateinit var units1: TextView
+	lateinit var units2: TextView
+	lateinit var units3: TextView
+
+
 
 	var speeds = ArrayList<Float>()
 
@@ -42,9 +48,13 @@ class SpeedometerActivity : AppCompatActivity(), LocationListener {
 		averageSpeedOutput = findViewById(R.id.averageSpeedOutput)
 		startBtn = findViewById(R.id.startBtn)
 		stopBtn = findViewById(R.id.stopBtn)
+		units1 = findViewById(R.id.unitText1)
+		units2 = findViewById(R.id.unitText2)
+		units3 = findViewById(R.id.unitText3)
 
 		lm = this.getSystemService(Context.LOCATION_SERVICE) as LocationManager
 		permissionCheck()
+
 
 
 		startBtn.setOnClickListener {
