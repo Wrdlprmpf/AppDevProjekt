@@ -20,11 +20,13 @@ import android.view.Menu
 import android.view.MenuItem
 import android.widget.Button
 import android.widget.ImageView
+import android.widget.Spinner
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import androidx.core.view.marginTop
+import androidx.core.location.LocationManagerCompat.isLocationEnabled
+import androidx.core.location.LocationManagerCompat.removeUpdates
 
 
 class SpeedometerActivity : AppCompatActivity(), LocationListener, SensorEventListener {
@@ -43,9 +45,14 @@ class SpeedometerActivity : AppCompatActivity(), LocationListener, SensorEventLi
 
 	var topSpeed: Float = 0F
 	var averageSpeed: Float = 0F
-	var clicked: Boolean = false
-	var speeds = ArrayList<Float>()
+	var clicked : Boolean = false
+	lateinit var units1: TextView
+	lateinit var units2: TextView
+	lateinit var units3: TextView
 
+
+
+	var speeds = ArrayList<Float>()
 
 	@SuppressLint("MissingPermission")
 	override fun onCreate(savedInstanceState: Bundle?) {
@@ -58,6 +65,9 @@ class SpeedometerActivity : AppCompatActivity(), LocationListener, SensorEventLi
 		stopBtn = findViewById(R.id.stopBtn)
 		pointer = findViewById(R.id.pointer)
 		ring = findViewById(R.id.ring)
+		units1 = findViewById(R.id.unitText1)
+		units2 = findViewById(R.id.unitText2)
+		units3 = findViewById(R.id.unitText3)
 
 		lm = this.getSystemService(Context.LOCATION_SERVICE) as LocationManager
 		sensorManager = getSystemService(Context.SENSOR_SERVICE) as SensorManager
@@ -71,13 +81,19 @@ class SpeedometerActivity : AppCompatActivity(), LocationListener, SensorEventLi
 
 		permissionCheck()
 
-		if (!clicked) {
-			lm.removeUpdates(this)
 
-		} else {
-			lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 1F, this)
-			var isGPSEnabled = lm.isProviderEnabled(LocationManager.GPS_PROVIDER);
-			val lm = this.getSystemService(LOCATION_SERVICE) as LocationManager
+
+		startBtn.setOnClickListener {
+			clicked = true
+			println(clicked)
+			lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0F, this)
+		}
+
+		stopBtn.setOnClickListener {
+			clicked = false
+			println(clicked)
+			lm.removeUpdates(this)
+			speedOutput.text = "0.0"
 		}
 	}
 
@@ -141,7 +157,7 @@ class SpeedometerActivity : AppCompatActivity(), LocationListener, SensorEventLi
 			println("0")
 			speeds.add(0F)
 		} else {
-			var speed = (location.getSpeed() * 3600) / 1000
+			var speed = (location.speed * 3600) / 1000
 			speedOutput.text = speed.toString()
 			maximumSpeed(speed)
 			speeds.add(speed)
@@ -159,23 +175,11 @@ class SpeedometerActivity : AppCompatActivity(), LocationListener, SensorEventLi
 	}
 
 	fun averageSpeed() {
-		var avg = 0F;
+		var avg = 0F
 		for (s in speeds) {
 			avg += s
 		}
 		averageSpeedOutput.text = (avg / speeds.size).toString()
-	}
-
-	fun clickStart() {
-		startBtn.setOnClickListener {
-			clicked = true
-		}
-	}
-
-	fun clickStop() {
-		stopBtn.setOnClickListener {
-			clicked = false
-		}
 	}
 
 	override fun onSensorChanged(p0: SensorEvent?) {
