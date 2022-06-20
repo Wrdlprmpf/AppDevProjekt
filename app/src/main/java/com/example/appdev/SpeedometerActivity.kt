@@ -40,17 +40,16 @@ class SpeedometerActivity : AppCompatActivity(), LocationListener, SensorEventLi
 	lateinit var stopBtn: Button
 	lateinit var topSpeedOutput: TextView
 	lateinit var averageSpeedOutput: TextView
-	lateinit var pointer:ImageView
-	lateinit var ring:ImageView
+	lateinit var pointer: ImageView
+	lateinit var ring: ImageView
 
-	var topSpeed: Float = 0F
-	var averageSpeed: Float = 0F
-	var clicked : Boolean = false
 	lateinit var units1: TextView
 	lateinit var units2: TextView
 	lateinit var units3: TextView
 
-
+	var topSpeed: Float = 0F
+	var averageSpeed: Float = 0F
+	var clicked: Boolean = false
 
 	var speeds = ArrayList<Float>()
 
@@ -72,16 +71,11 @@ class SpeedometerActivity : AppCompatActivity(), LocationListener, SensorEventLi
 		lm = this.getSystemService(Context.LOCATION_SERVICE) as LocationManager
 		sensorManager = getSystemService(Context.SENSOR_SERVICE) as SensorManager
 
-		accelerator = sensorManager.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION).also {
+		accelerator = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER).also {
 			sensorManager.registerListener(this, it, SensorManager.SENSOR_DELAY_UI)
 		}
 
-		//Nur für Debug
-		clicked = true
-
 		permissionCheck()
-
-
 
 		startBtn.setOnClickListener {
 			clicked = true
@@ -97,18 +91,34 @@ class SpeedometerActivity : AppCompatActivity(), LocationListener, SensorEventLi
 		}
 	}
 
-	fun movePointer(x:Float, y:Float){
-		var width = getScreenWidth(this)
-		var height = getScreenHeight(this)
-		pointer.x = width/2F-25 + (x*150)
-		pointer.y = height/2F-25 + (y*150)
-
-
-		//lassen
-		ring.y = height/2F-300
+	override fun onPause() {
+		super.onPause()
+		sensorManager.unregisterListener(
+			this,
+			sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER)
+		);
 	}
 
-	private fun getScreenHeight(activity: Activity): Int{
+	fun zeroToHundred(){
+		/**TODO Wenn Geschwindigkeit zb 3 sekunden auf 0 konstant bleibt (oder auch per button als reset)
+		 * Geschwindigkeit > 0 erst zu zählen beginnen da ansonsten Standzeit gezählt wird.
+		 * Einfach sobald über 100kmh erreicht wurde Timer zählen und in Sekunden anzeigen in TextView.
+		 *
+		 *
+		 */
+	}
+
+	fun movePointer(x: Float, y: Float) {
+		var width = getScreenWidth(this)
+		var height = getScreenHeight(this)
+		pointer.x = width / 2F - 25 + (x * 150)
+		pointer.y = height / 2F - 25 + (y * 150)
+
+		//Init für Ringheight
+		ring.y = height / 2F - 300
+	}
+
+	private fun getScreenHeight(activity: Activity): Int {
 		val displayMetrics = DisplayMetrics()
 		activity.windowManager.defaultDisplay.getMetrics(displayMetrics)
 		return displayMetrics.heightPixels
@@ -183,15 +193,14 @@ class SpeedometerActivity : AppCompatActivity(), LocationListener, SensorEventLi
 	}
 
 	override fun onSensorChanged(p0: SensorEvent?) {
-		if (p0?.sensor?.type == Sensor.TYPE_LINEAR_ACCELERATION) {
+		if (p0?.sensor?.type == Sensor.TYPE_ACCELEROMETER) {
 
 			var gravityV = FloatArray(3)
-
 
 			val alpha = 0.8f;
 			//gravity is calculated here
 			gravityV[0] = alpha * gravityV[0] + (1 - alpha) * p0.values[0];
-			gravityV[1] = alpha * gravityV[1] + (1 - alpha)* p0.values[1];
+			gravityV[1] = alpha * gravityV[1] + (1 - alpha) * p0.values[1];
 			gravityV[2] = alpha * gravityV[2] + (1 - alpha) * p0.values[2];
 			//acceleration retrieved from the event and the gravity is removed
 			var x = p0.values[0] - gravityV[0];
@@ -199,8 +208,8 @@ class SpeedometerActivity : AppCompatActivity(), LocationListener, SensorEventLi
 			var z = p0.values[2] - gravityV[2];
 
 			//m/s^2 to g-force
-			x = x/9.81f
-			y = y/9.81f
+			x = x / 9.81f
+			y = y / 9.81f
 			//z = z/9.81f
 
 			println("x " + roundNumber(x))
@@ -208,15 +217,14 @@ class SpeedometerActivity : AppCompatActivity(), LocationListener, SensorEventLi
 			//no need
 			//println("z " + roundNumber(z))
 
-			movePointer(x,y)
+			movePointer(x, y)
 		}
 	}
 
-	fun roundNumber(n:Float):String{
+	fun roundNumber(n: Float): String {
 		return "%.1f".format(n)
 	}
 
 	override fun onAccuracyChanged(p0: Sensor?, p1: Int) {
-
 	}
 }
