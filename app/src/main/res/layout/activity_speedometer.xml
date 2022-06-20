@@ -10,9 +10,7 @@
         android:id="@+id/speedometerOutput"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="176dp"
-        android:layout_marginTop="100dp"
-        android:layout_marginEnd="177dp"
+        android:layout_marginTop="50dp"
         android:text="Speed"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -23,7 +21,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="5dp"
-        android:layout_marginTop="100dp"
+        android:layout_marginTop="50dp"
         android:text="km/h"
         app:layout_constraintStart_toEndOf="@+id/speedometerOutput"
         app:layout_constraintTop_toTopOf="parent" />
@@ -32,7 +30,7 @@
         android:id="@+id/topSpeedOutput"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="200dp"
+        android:layout_marginTop="15dp"
         android:text="TopSpeed"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -43,7 +41,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="5dp"
-        android:layout_marginTop="200dp"
+        android:layout_marginTop="15dp"
         android:text="km/h"
         app:layout_constraintStart_toEndOf="@+id/topSpeedOutput"
         app:layout_constraintTop_toBottomOf="@+id/unitsText1" />
@@ -72,25 +70,39 @@
         android:id="@+id/startBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="48dp"
+        android:layout_marginBottom="10dp"
         android:text="Start"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.208"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.683" />
+        app:layout_constraintStart_toStartOf="parent" />
 
     <Button
         android:id="@+id/stopBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="109dp"
-        android:layout_marginTop="94dp"
         android:layout_marginEnd="48dp"
+        android:layout_marginBottom="10dp"
         android:text="Stop"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <ImageView
+        android:id="@+id/ring"
+        android:layout_width="600px"
+        android:layout_height="600px"
+        android:layout_marginStart="130dp"
+        android:layout_marginTop="250dp"
+        android:layout_marginEnd="131dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.633" />
+        app:srcCompat="@drawable/ring" />
+
+    <ImageView
+        android:id="@+id/pointer"
+        android:layout_width="50px"
+        android:layout_height="50px"
+        app:srcCompat="@drawable/circle"
+        tools:layout_editor_absoluteX="196dp"
+        tools:layout_editor_absoluteY="356dp" />
 </androidx.constraintlayout.widget.ConstraintLayout>

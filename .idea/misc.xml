@@ -3,9 +3,11 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="app/src/main/res/drawable/circle.xml" value="0.1" />
+        <entry key="app/src/main/res/drawable/ring.xml" value="0.1" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.19157608695652173" />
         <entry key="app/src/main/res/layout/activity_options.xml" value="0.19157608695652173" />
-        <entry key="app/src/main/res/layout/activity_speedometer.xml" value="0.19157608695652173" />
+        <entry key="app/src/main/res/layout/activity_speedometer.xml" value="0.165" />
       </map>
     </option>
   </component>
