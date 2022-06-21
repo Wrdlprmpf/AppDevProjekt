@@ -16,6 +16,7 @@ import android.location.LocationListener
 import android.location.LocationManager
 import android.os.Bundle
 import android.util.DisplayMetrics
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Button
@@ -27,6 +28,7 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.location.LocationManagerCompat.isLocationEnabled
 import androidx.core.location.LocationManagerCompat.removeUpdates
+import org.w3c.dom.Text
 
 
 class SpeedometerActivity : AppCompatActivity(), LocationListener, SensorEventListener {
@@ -40,6 +42,7 @@ class SpeedometerActivity : AppCompatActivity(), LocationListener, SensorEventLi
 	lateinit var stopBtn: Button
 	lateinit var topSpeedOutput: TextView
 	lateinit var averageSpeedOutput: TextView
+	lateinit var acceleration: TextView
 	lateinit var pointer: ImageView
 	lateinit var ring: ImageView
 
@@ -50,6 +53,13 @@ class SpeedometerActivity : AppCompatActivity(), LocationListener, SensorEventLi
 	var topSpeed: Float = 0F
 	var averageSpeed: Float = 0F
 	var clicked: Boolean = false
+	var speed: Float = 0F
+	var doneSprint: Boolean = false
+	var inRun = false
+	var runTime = 0F
+
+	var startTime: Long = System.currentTimeMillis()
+	var endTime: Long = 0
 
 	var speeds = ArrayList<Float>()
 
@@ -57,25 +67,10 @@ class SpeedometerActivity : AppCompatActivity(), LocationListener, SensorEventLi
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
 		setContentView(R.layout.activity_speedometer)
-		speedOutput = findViewById(R.id.speedometerOutput)
-		topSpeedOutput = findViewById(R.id.topSpeedOutput)
-		averageSpeedOutput = findViewById(R.id.averageSpeedOutput)
-		startBtn = findViewById(R.id.startBtn)
-		stopBtn = findViewById(R.id.stopBtn)
-		pointer = findViewById(R.id.pointer)
-		ring = findViewById(R.id.ring)
-		units1 = findViewById(R.id.unitText1)
-		units2 = findViewById(R.id.unitText2)
-		units3 = findViewById(R.id.unitText3)
 
-		lm = this.getSystemService(Context.LOCATION_SERVICE) as LocationManager
-		sensorManager = getSystemService(Context.SENSOR_SERVICE) as SensorManager
-
-		accelerator = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER).also {
-			sensorManager.registerListener(this, it, SensorManager.SENSOR_DELAY_UI)
-		}
-
+		initialize()
 		permissionCheck()
+		zeroToHundred()
 
 		startBtn.setOnClickListener {
 			clicked = true
@@ -91,6 +86,7 @@ class SpeedometerActivity : AppCompatActivity(), LocationListener, SensorEventLi
 		}
 	}
 
+
 	override fun onPause() {
 		super.onPause()
 		sensorManager.unregisterListener(
@@ -99,13 +95,32 @@ class SpeedometerActivity : AppCompatActivity(), LocationListener, SensorEventLi
 		);
 	}
 
-	fun zeroToHundred(){
+	fun zeroToHundred() {
 		/**TODO Wenn Geschwindigkeit zb 3 sekunden auf 0 konstant bleibt (oder auch per button als reset)
 		 * Geschwindigkeit > 0 erst zu zählen beginnen da ansonsten Standzeit gezählt wird.
 		 * Einfach sobald über 100kmh erreicht wurde Timer zählen und in Sekunden anzeigen in TextView.
-		 *
-		 *
 		 */
+
+		Log.d("Sprint done", doneSprint.toString())
+		Log.d("Sprint run", inRun.toString())
+
+		if (!inRun) startTime = System.currentTimeMillis()
+
+		if (speed < 0.1f) {
+			doneSprint = false
+			inRun = false
+		}
+
+		if (speed > 0.1F) {
+			inRun = true
+			if (speed > 1F && !doneSprint) {
+				endTime = System.currentTimeMillis()
+				acceleration.text = ((endTime - startTime) / 100F).toString()
+				runTime = (endTime - startTime) / 1000F
+				doneSprint = true
+			}
+		}
+
 	}
 
 	fun movePointer(x: Float, y: Float) {
@@ -167,7 +182,7 @@ class SpeedometerActivity : AppCompatActivity(), LocationListener, SensorEventLi
 			println("0")
 			speeds.add(0F)
 		} else {
-			var speed = (location.speed * 3600) / 1000
+			speed = (location.speed * 3600) / 1000
 			speedOutput.text = speed.toString()
 			maximumSpeed(speed)
 			speeds.add(speed)
@@ -190,6 +205,27 @@ class SpeedometerActivity : AppCompatActivity(), LocationListener, SensorEventLi
 			avg += s
 		}
 		averageSpeedOutput.text = (avg / speeds.size).toString()
+	}
+
+	private fun initialize() {
+		speedOutput = findViewById(R.id.speedometerOutput)
+		topSpeedOutput = findViewById(R.id.topSpeedOutput)
+		averageSpeedOutput = findViewById(R.id.averageSpeedOutput)
+		acceleration = findViewById(R.id.acceleration)
+		startBtn = findViewById(R.id.startBtn)
+		stopBtn = findViewById(R.id.stopBtn)
+		pointer = findViewById(R.id.pointer)
+		ring = findViewById(R.id.ring)
+		units1 = findViewById(R.id.unitText1)
+		units2 = findViewById(R.id.unitText2)
+		units3 = findViewById(R.id.unitText3)
+
+		lm = this.getSystemService(Context.LOCATION_SERVICE) as LocationManager
+		sensorManager = getSystemService(Context.SENSOR_SERVICE) as SensorManager
+
+		accelerator = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER).also {
+			sensorManager.registerListener(this, it, SensorManager.SENSOR_DELAY_FASTEST)
+		}
 	}
 
 	override fun onSensorChanged(p0: SensorEvent?) {
@@ -219,7 +255,9 @@ class SpeedometerActivity : AppCompatActivity(), LocationListener, SensorEventLi
 
 			movePointer(x, y)
 		}
+		zeroToHundred()
 	}
+
 
 	fun roundNumber(n: Float): String {
 		return "%.1f".format(n)
