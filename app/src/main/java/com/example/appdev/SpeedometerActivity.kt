@@ -57,11 +57,11 @@ class SpeedometerActivity : AppCompatActivity(), LocationListener, SensorEventLi
 	var doneSprint: Boolean = false
 	var inRun = false
 	var runTime = 0F
+	var totalspeed = 0F
+	var speedCounts = 0
 
 	var startTime: Long = System.currentTimeMillis()
 	var endTime: Long = 0
-
-	var speeds = ArrayList<Float>()
 
 	@SuppressLint("MissingPermission")
 	override fun onCreate(savedInstanceState: Bundle?) {
@@ -184,12 +184,14 @@ class SpeedometerActivity : AppCompatActivity(), LocationListener, SensorEventLi
 		if (location == null) {
 			speedOutput.text = "0 km/h"
 			println("0")
-			speeds.add(0F)
+			totalspeed+=0
+			speedCounts++
 		} else {
 			speed = (location.speed * 3600) / 1000
 			speedOutput.text = speed.toString()
 			maximumSpeed(speed)
-			speeds.add(speed)
+			totalspeed+=speed
+			speedCounts++
 			println(speed.toString())
 			println(location.latitude.toString())
 		}
@@ -204,11 +206,8 @@ class SpeedometerActivity : AppCompatActivity(), LocationListener, SensorEventLi
 	}
 
 	fun averageSpeed() {
-		var avg = 0F
-		for (s in speeds) {
-			avg += s
-		}
-		averageSpeedOutput.text = (avg / speeds.size).toString()
+		var avg = totalspeed/speedCounts
+		averageSpeedOutput.text = (totalspeed/speedCounts).toString()
 	}
 
 	private fun initialize() {
