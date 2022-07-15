@@ -7,16 +7,16 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Button
+import android.widget.Spinner
 
 class MainActivity : AppCompatActivity() {
-    lateinit var optionsIntent:Intent
     lateinit var btnSpeedometer: Button
     lateinit var btnDatabase: Button
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        optionsIntent = Intent(this@MainActivity, OptionsActivity::class.java)
         btnSpeedometer = findViewById(R.id.btnSpeedometer)
         btnDatabase = findViewById(R.id.btnDatabase)
 
