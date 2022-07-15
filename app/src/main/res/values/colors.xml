@@ -7,4 +7,10 @@
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <!--UX 05-->
+    <color name="dunkelTürkis">#1F768A</color>
+    <color name="midTürkis">#58A4B4</color>
+    <color name="türkis">#8BD3E1</color>
+    <color name="dunkel">#0D1E28</color>
+    <color name="gelb">#FBB845</color>
 </resources>
