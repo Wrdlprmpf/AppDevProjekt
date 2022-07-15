@@ -86,13 +86,17 @@ class SpeedometerActivity : AppCompatActivity(), LocationListener, SensorEventLi
 		}
 	}
 
-
 	override fun onPause() {
 		super.onPause()
 		sensorManager.unregisterListener(
 			this,
 			sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER)
 		);
+	}
+
+	override fun onResume(){
+		super.onResume()
+		sensorRegister()
 	}
 
 	fun zeroToHundred() {
@@ -223,8 +227,12 @@ class SpeedometerActivity : AppCompatActivity(), LocationListener, SensorEventLi
 		lm = this.getSystemService(Context.LOCATION_SERVICE) as LocationManager
 		sensorManager = getSystemService(Context.SENSOR_SERVICE) as SensorManager
 
+		sensorRegister()
+	}
+
+	fun sensorRegister(){
 		accelerator = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER).also {
-			sensorManager.registerListener(this, it, SensorManager.SENSOR_DELAY_FASTEST)
+			sensorManager.registerListener(this, it, SensorManager.SENSOR_DELAY_GAME)
 		}
 	}
 
