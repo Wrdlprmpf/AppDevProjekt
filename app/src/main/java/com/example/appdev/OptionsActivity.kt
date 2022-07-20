@@ -12,7 +12,7 @@ import android.widget.Spinner
 
 class OptionsActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
 
-    var units = arrayOf("km/h", "mph", "m/s")
+    var units = arrayOf("km/h", "mp/h", "m/s")
     lateinit var speedo : SpeedometerActivity
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -27,18 +27,24 @@ class OptionsActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener 
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         spinner.adapter = adapter
 
-        speedo = SpeedometerActivity()
-
+        //speedo = SpeedometerActivity()
         conversion()
     }
 
     var pos = 0
     fun conversion() {
-        when(pos) {
+        /*when(pos) {
             0 -> speedo.units1.text = "km/h"
             1 -> speedo.units2.text = "mph"
             2 -> speedo.units3.text = "m/s"
         }
+         */
+        when(pos){
+            0 -> Data.changeUnit("km/h")
+            1 -> Data.changeUnit("mp/h")
+            2 -> Data.changeUnit("m/s")
+        }
+
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {

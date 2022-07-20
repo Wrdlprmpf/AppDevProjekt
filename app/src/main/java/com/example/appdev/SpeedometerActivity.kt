@@ -72,6 +72,12 @@ class SpeedometerActivity : AppCompatActivity(), LocationListener, SensorEventLi
 		permissionCheck()
 		zeroToHundred()
 
+		units1.setText(Data.unit)
+		units2.setText(Data.unit)
+		units3.setText(Data.unit)
+
+		//TODO @Ändy Switch case in Data für die umrechnung in mph etc dh haupteinheit ist kmh rest einfach dividiert durch Data.Umrechnungsfaktor und die kmh wären bsp dividiert durch 1
+
 		startBtn.setOnClickListener {
 			clicked = true
 			println(clicked)
