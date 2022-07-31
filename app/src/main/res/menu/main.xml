@@ -7,5 +7,5 @@
         android:title="Einstellungen" />
     <item
         android:id="@+id/menuMain"
-        android:title="Was anderes" />
+        android:title="Hauptmenü" />
 </menu>
