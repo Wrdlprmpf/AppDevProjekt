@@ -65,44 +65,65 @@ class SpeedometerActivity : AppCompatActivity(), LocationListener, SensorEventLi
 
 	@SuppressLint("MissingPermission")
 	override fun onCreate(savedInstanceState: Bundle?) {
+		println("THIS IS CREATE")
 		super.onCreate(savedInstanceState)
 		setContentView(R.layout.activity_speedometer)
 
+
 		initialize()
 		permissionCheck()
+		switchSpeed()
 		zeroToHundred()
 
-		units1.setText(Data.unit)
-		units2.setText(Data.unit)
-		units3.setText(Data.unit)
 
-		//TODO @Ändy Switch case in Data für die umrechnung in mph etc dh haupteinheit ist kmh rest einfach dividiert durch Data.Umrechnungsfaktor und die kmh wären bsp dividiert durch 1
+
+		units1.text = Data.unit
+		units2.text = Data.unit
+		units3.text = Data.unit
+
 
 		startBtn.setOnClickListener {
 			clicked = true
-			println(clicked)
+			println(units1.toString())
 			lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0F, this)
+
 		}
 
 		stopBtn.setOnClickListener {
 			clicked = false
-			println(clicked)
 			lm.removeUpdates(this)
 			speedOutput.text = "0.0"
 		}
+		switchSpeed()
 	}
 
+
 	override fun onPause() {
+		println("THIS IS PAUSE")
 		super.onPause()
 		sensorManager.unregisterListener(
 			this,
 			sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER)
-		);
+		)
 	}
 
 	override fun onResume(){
+		println("RESUMEEEE")
 		super.onResume()
 		sensorRegister()
+		switchSpeed()
+	}
+
+	fun switchSpeed(): String {
+		var result : String = ""
+		if (units1.text.toString() == "Speed" || units1.text.toString()!="TopSpeed" || units1.text.toString()!="AverageSpeed") {
+		when (units1.text.toString()) {
+			"km/h" -> result = speed.toString()
+			"mp/h" -> result = (speed / 1.609).toString()
+			"m/s" -> result = (speed/3.6).toString()
+		}
+		}
+		return result
 	}
 
 	fun zeroToHundred() {
@@ -194,7 +215,8 @@ class SpeedometerActivity : AppCompatActivity(), LocationListener, SensorEventLi
 			speedCounts++
 		} else {
 			speed = (location.speed * 3600) / 1000
-			speedOutput.text = speed.toString()
+			// speedOutput.text = speed.toString()
+			speedOutput.text = switchSpeed()
 			maximumSpeed(speed)
 			totalspeed+=speed
 			speedCounts++
@@ -246,15 +268,15 @@ class SpeedometerActivity : AppCompatActivity(), LocationListener, SensorEventLi
 
 			var gravityV = FloatArray(3)
 
-			val alpha = 0.8f;
+			val alpha = 0.8f
 			//gravity is calculated here
-			gravityV[0] = alpha * gravityV[0] + (1 - alpha) * p0.values[0];
-			gravityV[1] = alpha * gravityV[1] + (1 - alpha) * p0.values[1];
-			gravityV[2] = alpha * gravityV[2] + (1 - alpha) * p0.values[2];
+			gravityV[0] = alpha * gravityV[0] + (1 - alpha) * p0.values[0]
+			gravityV[1] = alpha * gravityV[1] + (1 - alpha) * p0.values[1]
+			gravityV[2] = alpha * gravityV[2] + (1 - alpha) * p0.values[2]
 			//acceleration retrieved from the event and the gravity is removed
-			var x = p0.values[0] - gravityV[0];
-			var y = p0.values[1] - gravityV[1];
-			var z = p0.values[2] - gravityV[2];
+			var x = p0.values[0] - gravityV[0]
+			var y = p0.values[1] - gravityV[1]
+			var z = p0.values[2] - gravityV[2]
 
 			//m/s^2 to g-force
 			x = x / 9.81f
