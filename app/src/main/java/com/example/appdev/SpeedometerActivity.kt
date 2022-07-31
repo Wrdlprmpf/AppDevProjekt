@@ -126,11 +126,6 @@ class SpeedometerActivity : AppCompatActivity(), LocationListener, SensorEventLi
 	}
 
 	fun zeroToHundred() {
-		/**TODO Wenn Geschwindigkeit zb 3 sekunden auf 0 konstant bleibt (oder auch per button als reset)
-		 * Geschwindigkeit > 0 erst zu zählen beginnen da ansonsten Standzeit gezählt wird.
-		 * Einfach sobald über 100kmh erreicht wurde Timer zählen und in Sekunden anzeigen in TextView.
-		 */
-
 		Log.d("Sprint done", doneSprint.toString())
 		Log.d("Sprint run", inRun.toString())
 
