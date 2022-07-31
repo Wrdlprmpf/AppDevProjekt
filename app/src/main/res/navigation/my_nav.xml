@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/my_nav"
+    app:startDestination="@id/userLogin">
+
+    <fragment
+        android:id="@+id/listFragment"
+        android:name="com.example.roomapp.fragments.list.ListFragment"
+        android:label="List"
+        tools:layout="@layout/fragment_list" >
+        <action
+            android:id="@+id/action_listFragment_to_updateFragment"
+            app:destination="@id/updateFragment" />
+        <action
+            android:id="@+id/action_listFragment_to_mainFragment"
+            app:destination="@id/mainFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/updateFragment"
+        android:name="com.example.roomapp.fragments.list.DetailFragment"
+        android:label="Update"
+        tools:layout="@layout/fragment_detail" >
+        <action
+            android:id="@+id/action_detailFragment_to_listFragment"
+            app:destination="@id/listFragment" />
+        <argument
+            android:name="curentUser"
+            app:argType="com.example.roomapp.model.User" />
+    </fragment>
+    <fragment
+        android:id="@+id/userLogin"
+        android:name="com.example.roomapp.fragments.login.UserLogin"
+        android:label="fragment_user_login"
+        tools:layout="@layout/fragment_user_login" >
+        <action
+            android:id="@+id/action_userLogin_to_mainFragment"
+            app:destination="@id/mainFragment" />
+        <action
+            android:id="@+id/action_userLogin_self"
+            app:destination="@id/userLogin"
+            app:launchSingleTop="false" />
+    </fragment>
+    <fragment
+        android:id="@+id/mainFragment"
+        android:name="com.example.roomapp.fragments.main.MainFragment"
+        android:label="fragment_main"
+        tools:layout="@layout/fragment_main" >
+        <action
+            android:id="@+id/action_mainFragment_to_listFragment"
+            app:destination="@id/listFragment" />
+        <action
+            android:id="@+id/action_mainFragment_to_speedometerActivity"
+            app:destination="@id/speedometerActivity" />
+    </fragment>
+    <activity
+        android:id="@+id/speedometerActivity"
+        android:name="com.example.roomapp.SpeedometerActivity"
+        android:label="activity_speedometer"
+        tools:layout="@layout/activity_speedometer" />
+</navigation>
