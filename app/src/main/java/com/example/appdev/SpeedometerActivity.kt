@@ -72,7 +72,6 @@ class SpeedometerActivity : AppCompatActivity(), LocationListener, SensorEventLi
 
 		initialize()
 		permissionCheck()
-		switchSpeed()
 		zeroToHundred()
 
 
@@ -94,7 +93,7 @@ class SpeedometerActivity : AppCompatActivity(), LocationListener, SensorEventLi
 			lm.removeUpdates(this)
 			speedOutput.text = "0.0"
 		}
-		switchSpeed()
+
 	}
 
 
@@ -111,16 +110,16 @@ class SpeedometerActivity : AppCompatActivity(), LocationListener, SensorEventLi
 		println("RESUMEEEE")
 		super.onResume()
 		sensorRegister()
-		switchSpeed()
+
 	}
 
-	fun switchSpeed(): String {
+	fun switchSpeed(speed:Float): String {
 		var result : String = ""
 		if (units1.text.toString() == "Speed" || units1.text.toString()!="TopSpeed" || units1.text.toString()!="AverageSpeed") {
 		when (units1.text.toString()) {
-			"km/h" -> result = speed.toString()
-			"mp/h" -> result = (speed / 1.609).toString()
-			"m/s" -> result = (speed/3.6).toString()
+			"km/h" -> result = roundNumber(speed)
+			"mp/h" -> result = roundNumber(speed / 1.609f)
+			"m/s" -> result = roundNumber(speed/3.6f)
 		}
 		}
 		return result
@@ -216,7 +215,7 @@ class SpeedometerActivity : AppCompatActivity(), LocationListener, SensorEventLi
 		} else {
 			speed = (location.speed * 3600) / 1000
 			// speedOutput.text = speed.toString()
-			speedOutput.text = switchSpeed()
+			speedOutput.text = switchSpeed(speed)
 			maximumSpeed(speed)
 			totalspeed+=speed
 			speedCounts++
@@ -229,13 +228,15 @@ class SpeedometerActivity : AppCompatActivity(), LocationListener, SensorEventLi
 	fun maximumSpeed(speed: Float) {
 		if (speed > topSpeed) {
 			topSpeed = speed
-			topSpeedOutput.text = topSpeed.toString()
+			topSpeedOutput.text = switchSpeed(topSpeed)
 		}
 	}
 
 	fun averageSpeed() {
 		var avg = totalspeed/speedCounts
-		averageSpeedOutput.text = (totalspeed/speedCounts).toString()
+		//averageSpeedOutput.text = (totalspeed/speedCounts).toString()
+		averageSpeedOutput.text = switchSpeed(avg)
+
 	}
 
 	private fun initialize() {
